@@ -5,11 +5,13 @@
     android:padding="16dp">
 
     <!-- RecyclerView para mostrar el historial -->
-    <RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/btn_volver" />
+        android:layout_height="0dp"
+        android:layout_above="@id/btn_volver"
+        android:layout_alignParentTop="true"
+        android:layout_weight="1" />
 
     <!-- Botón para volver a la pantalla principal -->
     <Button

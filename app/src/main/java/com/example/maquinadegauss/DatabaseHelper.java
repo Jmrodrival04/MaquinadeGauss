@@ -9,6 +9,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "historial.db";
     private static final String TABLE_NAME = "historial";
+    private static final String COL_1 = "ID";
+    private static final String COL_2 = "FECHA";
+    private static final String COL_3 = "TIPO_CONTENEDOR";
+    private static final String COL_4 = "CANTIDAD";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -16,7 +20,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, FECHA TEXT, CONTENEDOR TEXT, CANTIDAD TEXT)");
+        db.execSQL("CREATE TABLE " + TABLE_NAME + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, FECHA TEXT, TIPO_CONTENEDOR TEXT, CANTIDAD INTEGER)");
     }
 
     @Override
@@ -25,9 +29,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Método para obtener todos los datos del historial
+    // Método para obtener todos los datos
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+    }
+
+    // Método para insertar un registro en la base de datos
+    public boolean insertData(String fecha, String tipoContenedor, String cantidad) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("INSERT INTO " + TABLE_NAME + " (FECHA, TIPO_CONTENEDOR, CANTIDAD) VALUES (?, ?, ?)", new Object[]{fecha, tipoContenedor, cantidad});
+        return true;
     }
 }
