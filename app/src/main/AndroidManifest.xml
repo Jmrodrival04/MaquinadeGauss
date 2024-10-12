@@ -1,6 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.maquinadegauss">
+
+    <!-- Sección de permisos (si es necesario añadir más permisos, incluirlos aquí) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -10,8 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaquinadeGauss">
 
-        <!-- MainActivity -->
-        <activity android:name=".MainActivity"
+        <!-- Actividad principal de la aplicación -->
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,10 +23,18 @@
             </intent-filter>
         </activity>
 
-        <!-- HistorialActivity -->
-        <activity android:name=".HistorialActivity"
-            android:exported="true" />
+        <!-- Declaración de la actividad Historial -->
+        <activity
+            android:name=".HistorialActivity"
+            android:exported="true">
+        </activity>
+
+        <!-- Declaración del servicio de simulación -->
+        <service
+            android:name=".SimulacionService"
+            android:exported="false" />
 
     </application>
 
 </manifest>
+

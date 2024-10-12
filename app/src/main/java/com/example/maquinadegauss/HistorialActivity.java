@@ -26,57 +26,59 @@ public class HistorialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial);
 
-        try {
-            // Inicializamos el RecyclerView
-            recyclerView = findViewById(R.id.recyclerView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Inicializamos el RecyclerView y el botón para volver
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-            // Inicializamos la lista y el adaptador
-            historialList = new ArrayList<>();
-            historialAdapter = new HistorialAdapter(historialList);
-            recyclerView.setAdapter(historialAdapter);
+        Button btnVolver = findViewById(R.id.btn_volver);
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HistorialActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
-            // Inicializamos el helper de base de datos
-            databaseHelper = new DatabaseHelper(this);
+        // Inicializamos la lista y el adaptador del RecyclerView
+        historialList = new ArrayList<>();
+        historialAdapter = new HistorialAdapter(historialList);
+        recyclerView.setAdapter(historialAdapter);
 
-            // Cargamos los datos de la base de datos
-            cargarDatosHistorial();
+        // Inicializamos la base de datos
+        databaseHelper = new DatabaseHelper(this);
 
-            // Botón para volver a la pantalla principal
-            Button btnVolver = findViewById(R.id.btn_volver);
-            btnVolver.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(HistorialActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-
-        } catch (Exception e) {
-            Log.e("HistorialActivity", "Error en HistorialActivity: " + e.getMessage());
-            Toast.makeText(this, "Error al cargar historial", Toast.LENGTH_SHORT).show();
-        }
+        // Cargamos los datos del historial
+        cargarDatosHistorial();
     }
 
-    // Método para cargar los datos de la base de datos
     private void cargarDatosHistorial() {
-        Cursor cursor = databaseHelper.getAllData(); // Método de base de datos para obtener los datos
+        historialList.clear();  // Limpiamos la lista actual antes de agregar los nuevos datos
+
+        Cursor cursor = databaseHelper.getAllData();
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 String fecha = cursor.getString(1);  // Columna 1: Fecha
-                String tipoContenedor = cursor.getString(2);  // Columna 2: Tipo de Contenedor
-                String cantidad = cursor.getString(3);  // Columna 3: Cantidad
+                int posicionFinal = cursor.getInt(2);  // Columna 2: Posición final
+                int numBolas = cursor.getInt(3);  // Columna 3: Número de bolas
 
-                // Añadimos el item a la lista
-                historialList.add(new HistorialItem(fecha, tipoContenedor, cantidad));
+                Log.d("HistorialActivity", "Cargando datos: Fecha = " + fecha + ", Posición final = " + posicionFinal + ", Número de bolas = " + numBolas);
+
+                // Añadimos el item a la lista si el número de bolas es mayor a 0
+                if (numBolas > 0) {
+                    historialList.add(new HistorialItem(fecha, posicionFinal, numBolas));
+                }
             } while (cursor.moveToNext());
 
             // Notificamos al adaptador que los datos han cambiado
             historialAdapter.notifyDataSetChanged();
         } else {
-            Log.e("HistorialActivity", "No se encontraron datos en la base de datos");
-            Toast.makeText(this, "No hay datos para mostrar", Toast.LENGTH_SHORT).show();
+            Log.d("HistorialActivity", "No hay datos en la base de datos.");
+            Toast.makeText(this, "No hay datos en el historial", Toast.LENGTH_SHORT).show();
+        }
+
+        if (cursor != null) {
+            cursor.close();
         }
     }
 }

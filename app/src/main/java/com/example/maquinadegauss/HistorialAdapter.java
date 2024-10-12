@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.HistorialViewHolder> {
@@ -19,16 +20,19 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
     @NonNull
     @Override
     public HistorialViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_historial, parent, false);
-        return new HistorialViewHolder(view);
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_historial, parent, false);
+        return new HistorialViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull HistorialViewHolder holder, int position) {
-        HistorialItem historialItem = historialList.get(position);
-        holder.tvFecha.setText(historialItem.getFecha());
-        holder.tvTipoContenedor.setText(historialItem.getTipoContenedor());
-        holder.tvCantidad.setText(historialItem.getCantidad());
+        HistorialItem item = historialList.get(position);
+        holder.fechaTextView.setText(item.getFecha());
+        holder.numBolasTextView.setText(String.valueOf(item.getNumBolas()));
+
+        // Establecer los datos de simulación para el gráfico pequeño
+        holder.miniSimulacionView.setSimulacionData(item.getPosicionFinal(), item.getNumBolas());
     }
 
     @Override
@@ -37,13 +41,15 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
     }
 
     public static class HistorialViewHolder extends RecyclerView.ViewHolder {
-        TextView tvFecha, tvTipoContenedor, tvCantidad;
+        public TextView fechaTextView;
+        public TextView numBolasTextView;
+        public SimulacionView miniSimulacionView;
 
         public HistorialViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvFecha = itemView.findViewById(R.id.tv_fecha);
-            tvTipoContenedor = itemView.findViewById(R.id.tv_tipo_contenedor);
-            tvCantidad = itemView.findViewById(R.id.tv_cantidad);
+            fechaTextView = itemView.findViewById(R.id.fechaTextView);
+            numBolasTextView = itemView.findViewById(R.id.numBolasTextView);
+            miniSimulacionView = itemView.findViewById(R.id.miniSimulacionView);  // Asegúrate de que el layout tenga esto
         }
     }
 }

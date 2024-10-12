@@ -7,15 +7,12 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class SimulacionView extends View {
 
+    public static final int NUM_CONTENEDORES = 10;  // Número de contenedores para la simulación
+    private int[] contenedores;  // Array para almacenar el número de bolas en cada contenedor
     private Paint paint;
-    private List<Integer> contenedores;  // Cada contenedor representará un punto en la distribución
-    public static final int NUM_CONTENEDORES = 21;  // Número de contenedores para la distribución
+    private Paint textPaint;
 
     public SimulacionView(Context context) {
         super(context);
@@ -27,53 +24,73 @@ public class SimulacionView extends View {
         init();
     }
 
+    public SimulacionView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    // Inicialización de la vista y los contenedores
     private void init() {
+        contenedores = new int[NUM_CONTENEDORES];  // Inicializamos el array de contenedores
         paint = new Paint();
         paint.setColor(Color.BLUE);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setTextSize(40f);
+        paint.setStrokeWidth(5);
 
-        // Inicializamos los contenedores en cero
-        contenedores = new ArrayList<>(Collections.nCopies(NUM_CONTENEDORES, 0));
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(40);  // Tamaño del texto para los números
+        textPaint.setTextAlign(Paint.Align.CENTER);  // Alinear el texto al centro
+    }
+
+    // Método para agregar bolas a un contenedor específico
+    public void agregarBola(int contenedorIndex) {
+        if (contenedorIndex >= 0 && contenedorIndex < NUM_CONTENEDORES) {
+            contenedores[contenedorIndex]++;  // Aumentamos el conteo de bolas en el contenedor
+            invalidate();  // Forzar redibujado
+        }
+    }
+
+    // Método para limpiar la simulación
+    public void clearSimulation() {
+        contenedores = new int[NUM_CONTENEDORES];  // Reinicializamos el array de contenedores
+        invalidate();  // Forzar redibujado
+    }
+
+    // Método para actualizar los datos de simulación
+    public void setSimulacionData(int posicionFinal, int numBolas) {
+        // Reiniciamos el array de contenedores
+        contenedores = new int[NUM_CONTENEDORES];
+        // Colocamos las bolas en la posición final, solo si numBolas es mayor a 0
+        if (posicionFinal >= 0 && posicionFinal < NUM_CONTENEDORES && numBolas > 0) {
+            contenedores[posicionFinal] = numBolas;
+        }
+        invalidate();  // Forzar redibujado
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int width = getWidth() / NUM_CONTENEDORES;  // Ancho de cada contenedor
-        int canvasHeight = getHeight();
+        int width = getWidth();
+        int height = getHeight();
+        int contenedorWidth = width / NUM_CONTENEDORES;
 
-        // Dibujamos solo los contenedores con más de 0 bolas
+        paint.setStyle(Paint.Style.FILL);
+
+        // Dibujar barras que representen el número de bolas en cada contenedor
         for (int i = 0; i < NUM_CONTENEDORES; i++) {
-            int numBolas = contenedores.get(i);
+            if (contenedores[i] > 0) {  // Solo dibujamos si el valor es mayor a 0
+                float left = i * contenedorWidth;
+                float right = left + contenedorWidth;
+                float top = height - (contenedores[i] * 10);  // Escalamos la altura en función de la cantidad de bolas
+                float bottom = height;
 
-            if (numBolas > 0) {  // Solo dibujamos si hay bolas (mayor que 0)
-                int height = (numBolas * canvasHeight) / 100;  // Escalamos según un máximo de 100 bolas
+                // Dibujar la barra
+                canvas.drawRect(left, top, right, bottom, paint);
 
-                // Dibujamos un rectángulo para cada contenedor con bolas
-                paint.setColor(Color.BLUE);
-                canvas.drawRect(i * width, canvasHeight - height, (i + 1) * width, canvasHeight, paint);
-
-                // Dibujamos el número de bolas encima del contenedor
-                paint.setColor(Color.BLACK);
-                canvas.drawText(String.valueOf(numBolas), i * width + (width / 4), canvasHeight - height - 20, paint);
+                // Dibujar el número de bolas encima de la barra
+                canvas.drawText(String.valueOf(contenedores[i]), left + contenedorWidth / 2, top - 10, textPaint);
             }
         }
-    }
-
-    // Método para actualizar la cantidad de bolas en un contenedor
-    public void agregarBola(int contenedorIndex) {
-        if (contenedorIndex >= 0 && contenedorIndex < NUM_CONTENEDORES) {
-            contenedores.set(contenedorIndex, contenedores.get(contenedorIndex) + 1);
-        }
-    }
-
-    // Método para limpiar la simulación cuando se detiene el servicio
-    public void clearSimulation() {
-        // Reseteamos los contenedores a cero
-        contenedores = new ArrayList<>(Collections.nCopies(NUM_CONTENEDORES, 0));
-        // Forzamos un redibujo de la vista para reflejar los cambios
-        postInvalidate();
     }
 }

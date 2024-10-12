@@ -13,11 +13,15 @@ public class MainActivity extends AppCompatActivity {
     private SimulacionView simulacionView;
     private static final int NUM_HILOS = 100;  // Número de hilos
     private static final int NUM_DECISIONES = 10;  // Número de decisiones por hilo
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Inicializamos el DatabaseHelper para manejar la base de datos
+        databaseHelper = new DatabaseHelper(this);
 
         // Botón para Iniciar Servicio
         Button btnIniciarServicio = findViewById(R.id.btn_iniciar_servicio);
@@ -72,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         final CountDownLatch latch = new CountDownLatch(NUM_HILOS);
 
         for (int i = 0; i < NUM_HILOS; i++) {
-            new ProcesoSimulacion(simulacionView, NUM_DECISIONES, latch).start();
+            new ProcesoSimulacion(simulacionView, NUM_DECISIONES, latch, databaseHelper).start();
         }
 
         // Una vez que todos los hilos hayan terminado, mostramos el resultado final

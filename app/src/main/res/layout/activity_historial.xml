@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="vertical">
 
     <!-- RecyclerView para mostrar el historial -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_above="@id/btn_volver"
-        android:layout_alignParentTop="true"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
     <!-- Botón para volver a la pantalla principal -->
     <Button
         android:id="@+id/btn_volver"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Volver"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        android:text="Volver" />
+</LinearLayout>
 
-</RelativeLayout>

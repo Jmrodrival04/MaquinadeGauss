@@ -2,25 +2,25 @@ package com.example.maquinadegauss;
 
 public class HistorialItem {
     private String fecha;
-    private String tipoContenedor;
-    private String cantidad;
+    private int posicionFinal;
+    private int numBolas;
 
-    public HistorialItem(String fecha, String tipoContenedor, String cantidad) {
+    public HistorialItem(String fecha, int posicionFinal, int numBolas) {
         this.fecha = fecha;
-        this.tipoContenedor = tipoContenedor;
-        this.cantidad = cantidad;
+        this.posicionFinal = posicionFinal;
+        this.numBolas = numBolas;
     }
 
+    // Getters
     public String getFecha() {
         return fecha;
     }
 
-    public String getTipoContenedor() {
-        return tipoContenedor;
+    public int getPosicionFinal() {
+        return posicionFinal;
     }
 
-    public String getCantidad() {
-        return cantidad;
+    public int getNumBolas() {
+        return numBolas;
     }
 }
-
