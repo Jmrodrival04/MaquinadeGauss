@@ -10,20 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaquinadeGauss">
 
-        <!-- Declaración del servicio MyService -->
-        <service
-            android:name=".MyService"
-            android:exported="false" />
-
-        <!-- Actividad principal -->
-        <activity
-            android:name=".MainActivity"
+        <!-- MainActivity -->
+        <activity android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- HistorialActivity -->
+        <activity android:name=".HistorialActivity"
+            android:exported="true" />
 
     </application>
 

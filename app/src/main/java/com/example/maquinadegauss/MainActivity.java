@@ -1,9 +1,11 @@
 package com.example.maquinadegauss;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.FrameLayout;
-
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,17 +17,54 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Enlazamos con el layout que contiene el SimulacionView
         setContentView(R.layout.activity_main);
 
-        // Añadimos la vista de simulación al FrameLayout
+        // Botón para Iniciar Servicio
+        Button btnIniciarServicio = findViewById(R.id.btn_iniciar_servicio);
+        btnIniciarServicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reiniciarSimulacion();  // Refresca y reinicia la simulación
+            }
+        });
+
+        // Botón para Detener Servicio
+        Button btnDetenerServicio = findViewById(R.id.btn_detener_servicio);
+        btnDetenerServicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                detenerServicio();  // Detiene el servicio de simulación
+            }
+        });
+
+        // Botón para ir al Historial
+        Button btnHistorial = findViewById(R.id.btn_historial);
+        btnHistorial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HistorialActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // Añadir la vista de simulación al FrameLayout
         simulacionView = new SimulacionView(this);
         FrameLayout simulacionContainer = findViewById(R.id.simulacionContainer);
         simulacionContainer.addView(simulacionView);
 
-        // Iniciamos la simulación
+        // Inicia la simulación
         iniciarSimulacion();
+    }
+
+    // Método para reiniciar la simulación
+    private void reiniciarSimulacion() {
+        finish();  // Termina la actividad actual
+        startActivity(getIntent());  // Vuelve a lanzar la actividad
+    }
+
+    // Método para detener el servicio (simulación)
+    private void detenerServicio() {
+        simulacionView.clearSimulation();  // Limpiar la simulación
     }
 
     // Método para iniciar múltiples hilos que simulan el proceso de decisión
@@ -41,13 +80,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    // Esperamos a que todos los hilos terminen
                     latch.await();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // Actualizamos la vista para mostrar el resultado final
-                            simulacionView.postInvalidate();
+                            simulacionView.postInvalidate();  // Refresca la vista
                         }
                     });
                 } catch (InterruptedException e) {
@@ -57,4 +94,3 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 }
-

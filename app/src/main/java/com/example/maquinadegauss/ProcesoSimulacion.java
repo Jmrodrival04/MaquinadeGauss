@@ -15,6 +15,7 @@ class ProcesoSimulacion extends Thread {
 
     @Override
     public void run() {
+        // Comenzamos en el centro de los contenedores
         int posicion = SimulacionView.NUM_CONTENEDORES / 2;  // Iniciamos en el punto medio de la distribución
 
         // Simulamos el proceso de decisiones
@@ -33,11 +34,9 @@ class ProcesoSimulacion extends Thread {
         if (posicion >= SimulacionView.NUM_CONTENEDORES) posicion = SimulacionView.NUM_CONTENEDORES - 1;
 
         // Añadimos el resultado final al contenedor correspondiente
-        simulacionView.agregarBola(posicion);  // Aquí pasamos el índice correctamente
+        simulacionView.agregarBola(posicion);  // Actualiza el contenedor con el índice correspondiente
 
         // Notificamos que este hilo ha terminado
         latch.countDown();
     }
 }
-
-

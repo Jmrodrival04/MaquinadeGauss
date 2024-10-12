@@ -44,18 +44,21 @@ public class SimulacionView extends View {
         int width = getWidth() / NUM_CONTENEDORES;  // Ancho de cada contenedor
         int canvasHeight = getHeight();
 
-        // Dibujamos los contenedores según el número de bolas acumuladas
+        // Dibujamos solo los contenedores con más de 0 bolas
         for (int i = 0; i < NUM_CONTENEDORES; i++) {
             int numBolas = contenedores.get(i);
-            int height = (numBolas * canvasHeight) / 100;  // Escalamos según un máximo de 100 bolas (ajustable)
 
-            // Dibujamos un rectángulo para cada contenedor
-            paint.setColor(Color.BLUE);
-            canvas.drawRect(i * width, canvasHeight - height, (i + 1) * width, canvasHeight, paint);
+            if (numBolas > 0) {  // Solo dibujamos si hay bolas (mayor que 0)
+                int height = (numBolas * canvasHeight) / 100;  // Escalamos según un máximo de 100 bolas
 
-            // Dibujamos el número de bolas encima del contenedor
-            paint.setColor(Color.BLACK);
-            canvas.drawText(String.valueOf(numBolas), i * width + (width / 4), canvasHeight - height - 20, paint);
+                // Dibujamos un rectángulo para cada contenedor con bolas
+                paint.setColor(Color.BLUE);
+                canvas.drawRect(i * width, canvasHeight - height, (i + 1) * width, canvasHeight, paint);
+
+                // Dibujamos el número de bolas encima del contenedor
+                paint.setColor(Color.BLACK);
+                canvas.drawText(String.valueOf(numBolas), i * width + (width / 4), canvasHeight - height - 20, paint);
+            }
         }
     }
 
@@ -65,7 +68,12 @@ public class SimulacionView extends View {
             contenedores.set(contenedorIndex, contenedores.get(contenedorIndex) + 1);
         }
     }
+
+    // Método para limpiar la simulación cuando se detiene el servicio
+    public void clearSimulation() {
+        // Reseteamos los contenedores a cero
+        contenedores = new ArrayList<>(Collections.nCopies(NUM_CONTENEDORES, 0));
+        // Forzamos un redibujo de la vista para reflejar los cambios
+        postInvalidate();
+    }
 }
-
-
-
