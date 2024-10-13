@@ -9,10 +9,11 @@ import android.view.View;
 
 public class SimulacionView extends View {
 
-    public static final int NUM_CONTENEDORES = 10;  // Número de contenedores para la simulación
+    public static final int NUM_CONTENEDORES = 10;  // Número de contenedores
     private int[] contenedores;  // Array para almacenar el número de bolas en cada contenedor
     private Paint paint;
     private Paint textPaint;
+    private int identificador; // Identificador del gráfico
 
     public SimulacionView(Context context) {
         super(context);
@@ -58,13 +59,16 @@ public class SimulacionView extends View {
 
     // Método para actualizar los datos de simulación
     public void setSimulacionData(int posicionFinal, int numBolas) {
-        // Reiniciamos el array de contenedores
         contenedores = new int[NUM_CONTENEDORES];
-        // Colocamos las bolas en la posición final, solo si numBolas es mayor a 0
         if (posicionFinal >= 0 && posicionFinal < NUM_CONTENEDORES && numBolas > 0) {
             contenedores[posicionFinal] = numBolas;
         }
         invalidate();  // Forzar redibujado
+    }
+
+    // Método para asignar el identificador del gráfico
+    public void setIdentificador(int id) {
+        this.identificador = id;
     }
 
     @Override
@@ -77,18 +81,19 @@ public class SimulacionView extends View {
 
         paint.setStyle(Paint.Style.FILL);
 
+        // Dibujar el identificador del gráfico
+        canvas.drawText("ID: " + identificador, width / 2, 50, textPaint);
+
         // Dibujar barras que representen el número de bolas en cada contenedor
         for (int i = 0; i < NUM_CONTENEDORES; i++) {
-            if (contenedores[i] > 0) {  // Solo dibujamos si el valor es mayor a 0
+            if (contenedores[i] > 0) {
                 float left = i * contenedorWidth;
                 float right = left + contenedorWidth;
-                float top = height - (contenedores[i] * 10);  // Escalamos la altura en función de la cantidad de bolas
+                float top = height - (contenedores[i] * 10);
                 float bottom = height;
 
-                // Dibujar la barra
                 canvas.drawRect(left, top, right, bottom, paint);
 
-                // Dibujar el número de bolas encima de la barra
                 canvas.drawText(String.valueOf(contenedores[i]), left + contenedorWidth / 2, top - 10, textPaint);
             }
         }

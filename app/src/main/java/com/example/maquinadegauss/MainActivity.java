@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.FrameLayout;
+import com.google.firebase.FirebaseApp;
 import java.util.concurrent.CountDownLatch;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Inicializamos Firebase
+        FirebaseApp.initializeApp(this);
 
         // Inicializamos el DatabaseHelper para manejar la base de datos
         databaseHelper = new DatabaseHelper(this);

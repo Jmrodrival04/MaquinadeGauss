@@ -31,8 +31,8 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
         holder.fechaTextView.setText(item.getFecha());
         holder.numBolasTextView.setText(String.valueOf(item.getNumBolas()));
 
-        // Establecer los datos de simulación para el gráfico pequeño
-        holder.miniSimulacionView.setSimulacionData(item.getPosicionFinal(), item.getNumBolas());
+        // Aquí puedes agregar la lógica para mostrar los gráficos en miniatura, si es necesario
+        // holder.miniSimulacionView.setSimulacionData(item.getPosicionFinal(), item.getNumBolas());
     }
 
     @Override
@@ -43,13 +43,13 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Hist
     public static class HistorialViewHolder extends RecyclerView.ViewHolder {
         public TextView fechaTextView;
         public TextView numBolasTextView;
-        public SimulacionView miniSimulacionView;
+        // public SimulacionView miniSimulacionView; // Si lo necesitas
 
         public HistorialViewHolder(@NonNull View itemView) {
             super(itemView);
             fechaTextView = itemView.findViewById(R.id.fechaTextView);
             numBolasTextView = itemView.findViewById(R.id.numBolasTextView);
-            miniSimulacionView = itemView.findViewById(R.id.miniSimulacionView);  // Asegúrate de que el layout tenga esto
+            // miniSimulacionView = itemView.findViewById(R.id.miniSimulacionView); // Si lo tienes en tu layout
         }
     }
 }

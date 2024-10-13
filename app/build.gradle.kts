@@ -1,8 +1,7 @@
-// build.gradle.kts (App level)
-
 plugins {
     id("com.android.application")
-    kotlin("android") version "1.9.10"
+    kotlin("android")
+    id("com.google.gms.google-services")  // Plugin de Firebase
 }
 
 android {
@@ -12,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.example.maquinadegauss"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -63,11 +62,14 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation(libs.androidx.appcompat)
 
+    // Firebase dependencies
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation(libs.androidx.recyclerview)
+    implementation("com.google.firebase:firebase-database")
+
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.1")
 
     // Test dependencies
     testImplementation("junit:junit:4.13.2")
@@ -80,5 +82,7 @@ dependencies {
 
     // Debug tools
     debugImplementation("androidx.compose.ui:ui-tooling")
-
 }
+
+// Aplicar el plugin de Google Services para Firebase
+apply(plugin = "com.google.gms.google-services")

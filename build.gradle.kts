@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 
 plugins {
     // Asegúrate de que la versión de Kotlin sea consistente aquí
