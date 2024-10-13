@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.maquinadegauss"
-    compileSdk = 35  // Android 14 (API 35)
+    compileSdk = 34  // Android 14 (API 35)
 
     defaultConfig {
         applicationId = "com.example.maquinadegauss"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
