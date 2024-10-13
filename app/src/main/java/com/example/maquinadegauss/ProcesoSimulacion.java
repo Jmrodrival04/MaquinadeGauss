@@ -20,7 +20,7 @@ public class ProcesoSimulacion extends Thread {
     public void run() {
         try {
             // Simulación de lógica de decisión
-            int posicionFinal = (int) (Math.random() * SimulacionView.NUM_CONTENEDORES);
+            int posicionFinal = (int) (Math.random() * LineaDeEnsamblaje.NUM_CONTENEDORES);
             simulacionView.agregarBola(posicionFinal);
 
             // Inserción en la base de datos

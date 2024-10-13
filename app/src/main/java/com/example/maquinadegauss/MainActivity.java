@@ -4,19 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
-
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.FirebaseApp;
-
-import java.util.concurrent.CountDownLatch;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SimulacionView simulacionView;
-    private static final int NUM_HILOS = 100;  // Número de hilos
-    private static final int NUM_DECISIONES = 10;  // Número de decisiones por hilo
+    private RecyclerView recyclerView;
+    private HistorialAdapter adapter;
+    private List<HistorialItem> historialList = new ArrayList<>();
     private DatabaseHelper databaseHelper;
 
     @Override
@@ -24,84 +29,51 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Inicializamos Firebase
+        // Inicializar Firebase
         FirebaseApp.initializeApp(this);
 
-        // Inicializamos el DatabaseHelper para manejar la base de datos
+        // Inicializar DatabaseHelper para manejar SQLite
         databaseHelper = new DatabaseHelper(this);
 
-        // Botón para Iniciar Servicio
-        Button btnIniciarServicio = findViewById(R.id.btn_iniciar_servicio);
-        btnIniciarServicio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reiniciarSimulacion();  // Refresca y reinicia la simulación
-            }
-        });
+        // Configurar RecyclerView para el historial
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new HistorialAdapter(historialList);
+        recyclerView.setAdapter(adapter);
 
-        // Botón para Detener Servicio
-        Button btnDetenerServicio = findViewById(R.id.btn_detener_servicio);
-        btnDetenerServicio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                detenerServicio();  // Detiene el servicio de simulación
-            }
-        });
+        // Cargar historial desde Firebase
+        cargarHistorialDesdeFirebase();
 
-        // Botón para ir al Historial
-        Button btnHistorial = findViewById(R.id.btn_historial);
-        btnHistorial.setOnClickListener(new View.OnClickListener() {
+        // Botón para iniciar la simulación
+        Button botonSimulacion = findViewById(R.id.botonSimulacion);
+        botonSimulacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, HistorialActivity.class);
+                // Iniciar la simulación
+                Intent intent = new Intent(MainActivity.this, SimulacionActivity.class);
                 startActivity(intent);
             }
         });
-
-        // Añadir la vista de simulación al FrameLayout
-        simulacionView = new SimulacionView(this);
-        FrameLayout simulacionContainer = findViewById(R.id.simulacionContainer);
-        simulacionContainer.addView(simulacionView);
-
-        // Inicia la simulación
-        iniciarSimulacion();
     }
 
-    // Método para reiniciar la simulación
-    private void reiniciarSimulacion() {
-        finish();  // Termina la actividad actual
-        startActivity(getIntent());  // Vuelve a lanzar la actividad
-    }
-
-    // Método para detener el servicio (simulación)
-    private void detenerServicio() {
-        simulacionView.clearSimulation();  // Limpiar la simulación
-    }
-
-    // Método para iniciar múltiples hilos que simulan el proceso de decisión
-    private void iniciarSimulacion() {
-        final CountDownLatch latch = new CountDownLatch(NUM_HILOS);
-
-        for (int i = 0; i < NUM_HILOS; i++) {
-            new ProcesoSimulacion(simulacionView, NUM_DECISIONES, latch, databaseHelper).start();
-        }
-
-        // Una vez que todos los hilos hayan terminado, mostramos el resultado final
-        new Thread(new Runnable() {
+    // Método para cargar historial desde Firebase
+    private void cargarHistorialDesdeFirebase() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("historial");
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void run() {
-                try {
-                    latch.await();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            simulacionView.postInvalidate();  // Refresca la vista
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                historialList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    HistorialItem item = snapshot.getValue(HistorialItem.class);
+                    historialList.add(item);
                 }
+                adapter.notifyDataSetChanged();
             }
-        }).start();
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(MainActivity.this, "Error al cargar historial", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

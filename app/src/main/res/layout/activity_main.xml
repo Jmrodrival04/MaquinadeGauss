@@ -1,44 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:ignore="ExtraText">
+    android:orientation="vertical">
 
-    <!-- FrameLayout para la vista de simulación -->
-    <FrameLayout
-        android:id="@+id/simulacionContainer"
+    <Button
+        android:id="@+id/botonSimulacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Simulación" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="wrap_content" />
+</LinearLayout>
 
-        <Button
-            android:id="@+id/btn_detener_servicio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Detener Servicio" />
-    </FrameLayout>  <!-- Limita la altura para que el botón no se solape -->
-    <!-- Botón para iniciar servicio -->
-    <Button
-        android:id="@+id/btn_iniciar_servicio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Iniciar Servicio"
-        android:layout_below="@id/simulacionContainer"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
-
-    <!-- Botón para detener servicio -->
-
-    <!-- Botón para ir al historial -->
-    <Button
-        android:id="@+id/btn_historial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Historial"
-        android:layout_below="@id/btn_detener_servicio"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
-
-</RelativeLayout>

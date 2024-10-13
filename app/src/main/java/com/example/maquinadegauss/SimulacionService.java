@@ -4,6 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class SimulacionService extends Service {
@@ -18,9 +21,15 @@ public class SimulacionService extends Service {
         super.onCreate();
         Log.d("SimulacionService", "Servicio de simulación creado");
 
+        // Crear la lista de contenedores para SimulacionView
+        List<Integer> contenedores = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {  // Inicializamos con 10 contenedores
+            contenedores.add(0);
+        }
+
         // Inicializamos la vista de simulación y el helper de base de datos
-        simulacionView = new SimulacionView(this);
-        databaseHelper = new DatabaseHelper(this);  // Añadimos DatabaseHelper
+        simulacionView = new SimulacionView(this, contenedores);  // Ahora con los contenedores
+        databaseHelper = new DatabaseHelper(this);  // Añadimos DatabaseHelper para la gestión de la base de datos
     }
 
     @Override

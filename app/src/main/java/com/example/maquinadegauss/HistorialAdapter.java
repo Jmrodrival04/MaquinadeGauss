@@ -4,52 +4,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
-public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.HistorialViewHolder> {
+public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.ViewHolder> {
 
-    private List<HistorialItem> historialList;
+    private List<HistorialItem> historialItems;
 
-    public HistorialAdapter(List<HistorialItem> historialList) {
-        this.historialList = historialList;
-    }
-
-    @NonNull
-    @Override
-    public HistorialViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_historial, parent, false);
-        return new HistorialViewHolder(itemView);
+    public HistorialAdapter(List<HistorialItem> historialItems) {
+        this.historialItems = historialItems;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HistorialViewHolder holder, int position) {
-        HistorialItem item = historialList.get(position);
-        holder.fechaTextView.setText(item.getFecha());
-        holder.numBolasTextView.setText(String.valueOf(item.getNumBolas()));
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_historial, parent, false);
+        return new ViewHolder(view);
+    }
 
-        // Aquí puedes agregar la lógica para mostrar los gráficos en miniatura, si es necesario
-        // holder.miniSimulacionView.setSimulacionData(item.getPosicionFinal(), item.getNumBolas());
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        HistorialItem item = historialItems.get(position);
+        holder.textView.setText(item.toString());  // Mostramos el texto del objeto HistorialItem
     }
 
     @Override
     public int getItemCount() {
-        return historialList.size();
+        return historialItems.size();
     }
 
-    public static class HistorialViewHolder extends RecyclerView.ViewHolder {
-        public TextView fechaTextView;
-        public TextView numBolasTextView;
-        // public SimulacionView miniSimulacionView; // Si lo necesitas
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView textView;  // El TextView del item_historial.xml
 
-        public HistorialViewHolder(@NonNull View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
-            fechaTextView = itemView.findViewById(R.id.fechaTextView);
-            numBolasTextView = itemView.findViewById(R.id.numBolasTextView);
-            // miniSimulacionView = itemView.findViewById(R.id.miniSimulacionView); // Si lo tienes en tu layout
+            // Referenciamos el TextView desde el layout item_historial.xml
+            textView = itemView.findViewById(R.id.textView);
         }
     }
 }
